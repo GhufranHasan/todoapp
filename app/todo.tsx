@@ -28,27 +28,57 @@ export default function Todo() {
     }
     const addTodo = () => {
         const newTodo = { todoText: todo, completed: false}
-        const newTodos = { ...todos, newTodo }
+        const newTodos = [ ...todos, newTodo ]
         setTodos(newTodos)
         setTodo("")
         console.log()
     }
+
+    const deleteTodo = (el: any) => {
+        const newTodos = todos.filter((todo) => {
+            if(todo.todoText == el.todoText)
+                return false
+            return true
+        })
+        console.log("old Todos ", todos, "new Todos ", newTodos)
+        setTodos(newTodos)
+    }
   return (
     <>
-        <div>Todo</div>
-        <input placeholder="Add Todo" value={todo} onChange={(e)=>{setTodo(e.target.value.toLowerCase())}} />
-        <button onClick={addTodo}>Add Todo</button>
+        <h1 style={{fontFamily: "calibri"}}>Todo</h1>
+        <input style={{
+            height: "30px"
+        }} placeholder="Add Todo" value={todo} onChange={(e)=>{setTodo(e.target.value.toLowerCase())}} />
+        &nbsp; &nbsp; &nbsp;
+        <button style={{
+            backgroundColor: "blue",
+            color: "white",
+            borderRadius: "8px",
+            height: "30px",
+            width: "90px",
+            fontFamily: "calibri"
+        }} onClick={addTodo}>Add Todo</button>
         <ul>
             {todos.map((elm) => {
                 return (
                     <li style={{
                         color: elm.completed ? "green" : "orange",
+                        fontFamily: "calibri",
                         fontStyle: "oblique",
                         listStyle: "none"
                     }}
                         key={elm.todoText}>
                         <input type="checkbox" checked={elm.completed} onChange={() => { onClickHandler(elm) } } />
                         {elm.todoText}
+                        &nbsp; &nbsp; &nbsp;
+                        <button style={{
+                            backgroundColor: "red",
+                            color: "white",
+                            borderRadius: "8px",
+                            height: "30px",
+                            width: "90px",
+                            fontFamily: "calibri"
+                        }} onClick={() => (deleteTodo(elm))}>Delete Todo</button><br/><br/>
                     </li>
                 )
             })}
