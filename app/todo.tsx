@@ -27,11 +27,14 @@ export default function Todo() {
         setTodos(newTodos)
     }
     const addTodo = () => {
+        if(todos.some(t => t.todoText === todo)) {
+            alert('Todo already exists')
+            return
+        }
         const newTodo = { todoText: todo, completed: false}
         const newTodos = [ ...todos, newTodo ]
         setTodos(newTodos)
         setTodo("")
-        console.log()
     }
 
     const deleteTodo = (el: any) => {
@@ -43,6 +46,10 @@ export default function Todo() {
         console.log("old Todos ", todos, "new Todos ", newTodos)
         setTodos(newTodos)
     }
+
+    const clearList = () => {
+        setTodos([]);
+      }
   return (
     <>
         <h1 style={{fontFamily: "calibri"}}>Todo</h1>
@@ -58,31 +65,52 @@ export default function Todo() {
             width: "90px",
             fontFamily: "calibri"
         }} onClick={addTodo}>Add Todo</button>
-        <ul>
-            {todos.map((elm) => {
-                return (
-                    <li style={{
-                        color: elm.completed ? "green" : "orange",
-                        fontFamily: "calibri",
-                        fontStyle: "oblique",
-                        listStyle: "none"
-                    }}
-                        key={elm.todoText}>
-                        <input type="checkbox" checked={elm.completed} onChange={() => { onClickHandler(elm) } } />
-                        {elm.todoText}
-                        &nbsp; &nbsp; &nbsp;
-                        <button style={{
-                            backgroundColor: "red",
-                            color: "white",
-                            borderRadius: "8px",
-                            height: "30px",
-                            width: "90px",
-                            fontFamily: "calibri"
-                        }} onClick={() => (deleteTodo(elm))}>Delete Todo</button><br/><br/>
-                    </li>
-                )
-            })}
-        </ul>
+        &nbsp; &nbsp; &nbsp;
+        <button style={{
+            backgroundColor: "red",
+            color: "white",
+            borderRadius: "8px",
+            height: "30px",
+            width: "90px",
+            fontFamily: "calibri"
+        }} onClick={clearList}>Clear List</button>
+        {todos.length === 0 ? (
+            <div style={{
+                fontFamily: "calibri", 
+                fontSize: "40px", 
+                fontStyle: "oblique",
+                textAlign: "center",
+                color: "red"
+                }}>
+                Todo List is Empty
+            </div>
+        ) : (
+            <ul>
+                {todos.map((elm) => {
+                    return (
+                        <li style={{
+                            color: elm.completed ? "green" : "orange",
+                            fontFamily: "calibri",
+                            fontStyle: "oblique",
+                            listStyle: "none"
+                        }}
+                            key={elm.todoText}>
+                            <input type="checkbox" checked={elm.completed} onChange={() => { onClickHandler(elm) } } />
+                            {elm.todoText}
+                            &nbsp; &nbsp; &nbsp;
+                            <button style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                borderRadius: "8px",
+                                height: "30px",
+                                width: "90px",
+                                fontFamily: "calibri"
+                            }} onClick={() => (deleteTodo(elm))}>Delete Todo</button><br/><br/>
+                        </li>
+                    )
+                })}
+            </ul>
+        )}
     </>
   )
 }

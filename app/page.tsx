@@ -13,7 +13,12 @@ export default function page() {
       <h2>Counter App</h2>
       <br />
       <CounterApp /> */}
-      <Todo />
+      <div style={{
+        width: "50%",
+        margin: "0 auto"
+      }}>
+        <Todo />
+      </div>
     </>
   )
 }
