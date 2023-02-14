@@ -31,6 +31,12 @@ export default function Todo() {
             alert('Todo already exists')
             return
         }
+
+        if (!todo) {
+            alert("Input field is empty!");
+            return;
+        }
+
         const newTodo = { todoText: todo, completed: false}
         const newTodos = [ ...todos, newTodo ]
         setTodos(newTodos)
@@ -66,14 +72,16 @@ export default function Todo() {
             fontFamily: "calibri"
         }} onClick={addTodo}>Add Todo</button>
         &nbsp; &nbsp; &nbsp;
-        <button style={{
-            backgroundColor: "red",
-            color: "white",
-            borderRadius: "8px",
-            height: "30px",
-            width: "90px",
-            fontFamily: "calibri"
-        }} onClick={clearList}>Clear List</button>
+        {todos.length !== 0 && (
+            <button style={{
+                backgroundColor: "red",
+                color: "white",
+                borderRadius: "8px",
+                height: "30px",
+                width: "90px",
+                fontFamily: "calibri"
+            }} onClick={clearList}>Clear List</button>
+        )}
         {todos.length === 0 ? (
             <div style={{
                 fontFamily: "calibri", 
