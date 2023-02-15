@@ -2,14 +2,21 @@
 
 import React, { useState } from 'react'
 
+interface TodoType {
+    todoText: string;
+    completed: boolean;
+}
+
 export default function Todo() {
     const [todo, setTodo] = useState("")
-    const [todos, setTodos] = useState([
+    const [todos, setTodos] = useState<TodoType[]>([
         {todoText: "todo 1", completed: false},
         {todoText: "todo 2", completed: true},
         {todoText: "todo 3", completed: true},
         {todoText: "todo 4", completed: false}
     ])
+
+    const [selectedTodos, setSelectedTodos] = useState<TodoType[]>([])
 
     const onClickHandler = (el: any) => {
         console.log("el", el)
@@ -55,7 +62,25 @@ export default function Todo() {
 
     const clearList = () => {
         setTodos([]);
-      }
+    }
+
+    const handleSelectedTodo = (todo: TodoType, checked: any) => {
+        if (checked) {
+          setSelectedTodos([...selectedTodos, todo]);
+        } else {
+          const newSelectedTodos = selectedTodos.filter((t) => t.todoText !== todo.todoText);
+          setSelectedTodos(newSelectedTodos);
+        }
+    }
+
+    const handleDeleteSelected = () => {
+        const newTodos = todos.filter((todo) => {
+          return !selectedTodos.some((t) => t.todoText === todo.todoText);
+        });
+        setTodos(newTodos);
+        setSelectedTodos([]);
+    }
+
   return (
     <>
         <h1 style={{fontFamily: "calibri"}}>Todo</h1>
@@ -73,14 +98,26 @@ export default function Todo() {
         }} onClick={addTodo}>Add Todo</button>
         &nbsp; &nbsp; &nbsp;
         {todos.length !== 0 && (
-            <button style={{
-                backgroundColor: "red",
-                color: "white",
-                borderRadius: "8px",
-                height: "30px",
-                width: "90px",
-                fontFamily: "calibri"
-            }} onClick={clearList}>Clear List</button>
+            <>
+                <button style={{
+                    backgroundColor: "red",
+                    color: "white",
+                    borderRadius: "8px",
+                    height: "30px",
+                    width: "90px",
+                    fontFamily: "calibri"
+                }} onClick={clearList}>Clear List</button>
+                &nbsp; &nbsp; &nbsp;
+                <button style={{
+                    backgroundColor: "red",
+                    color: "white",
+                    borderRadius: "8px",
+                    height: "30px",
+                    width: "180px",
+                    fontFamily: "calibri"
+                }}
+                onClick={handleDeleteSelected}>Delete Selected Items</button>
+            </>
         )}
         {todos.length === 0 ? (
             <div style={{
