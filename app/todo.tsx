@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
+import TodoItem from './todoItem'
 
 export default function Todo() {
     const [todo, setTodo] = useState("")
@@ -10,6 +11,10 @@ export default function Todo() {
         {todoText: "todo 3", completed: true},
         {todoText: "todo 4", completed: false}
     ])
+
+    const [inputError, setInputError] = useState(false)
+
+    const [showDeleteAll, setShowDeleteAll] = useState(false)
 
     const onClickHandler = (el: any) => {
         console.log("el", el)
@@ -27,20 +32,25 @@ export default function Todo() {
         setTodos(newTodos)
     }
     const addTodo = () => {
+        if (todo.trim() === '') {
+        setInputError(true)
+        return
+        }
+
         if(todos.some(t => t.todoText === todo)) {
             alert('Todo already exists')
             return
         }
 
-        if (!todo) {
-            alert("Input field is empty!");
-            return;
+        if (todos.length > 0) {
+            setShowDeleteAll(true)
         }
 
         const newTodo = { todoText: todo, completed: false}
         const newTodos = [ ...todos, newTodo ]
         setTodos(newTodos)
         setTodo("")
+        setInputError(false)
     }
 
     const deleteTodo = (el: any) => {
@@ -54,14 +64,17 @@ export default function Todo() {
     }
 
     const clearList = () => {
-        setTodos([]);
+        setTodos([])
+        setShowDeleteAll(false)
       }
   return (
     <>
         <h1 style={{fontFamily: "calibri"}}>Todo</h1>
         <input style={{
             height: "30px"
-        }} placeholder="Add Todo" value={todo} onChange={(e)=>{setTodo(e.target.value.toLowerCase())}} />
+        }} placeholder="Add Todo" 
+        value={todo} 
+        onChange={(e)=>{setTodo(e.target.value); setInputError(false)}} />
         &nbsp; &nbsp; &nbsp;
         <button style={{
             backgroundColor: "blue",
@@ -70,7 +83,7 @@ export default function Todo() {
             height: "30px",
             width: "90px",
             fontFamily: "calibri"
-        }} onClick={addTodo}>Add Todo</button>
+        }} onClick={addTodo} disabled={inputError}>Add Todo</button>
         &nbsp; &nbsp; &nbsp;
         {todos.length !== 0 && (
             <button style={{
@@ -94,29 +107,14 @@ export default function Todo() {
             </div>
         ) : (
             <ul>
-                {todos.map((elm) => {
-                    return (
-                        <li style={{
-                            color: elm.completed ? "green" : "orange",
-                            fontFamily: "calibri",
-                            fontStyle: "oblique",
-                            listStyle: "none"
-                        }}
-                            key={elm.todoText}>
-                            <input type="checkbox" checked={elm.completed} onChange={() => { onClickHandler(elm) } } />
-                            {elm.todoText}
-                            &nbsp; &nbsp; &nbsp;
-                            <button style={{
-                                backgroundColor: "red",
-                                color: "white",
-                                borderRadius: "8px",
-                                height: "30px",
-                                width: "90px",
-                                fontFamily: "calibri"
-                            }} onClick={() => (deleteTodo(elm))}>Delete Todo</button><br/><br/>
-                        </li>
-                    )
-                })}
+    {todos.map((todo) => (
+                <TodoItem
+                    key={todo.todoText}
+                    todo={todo}
+                    onClick={(todo: any) => onClickHandler(todo)}
+                    onDelete={(todo: any) => deleteTodo(todo)}
+                />
+                ))}
             </ul>
         )}
     </>
