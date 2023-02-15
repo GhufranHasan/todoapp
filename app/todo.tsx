@@ -72,7 +72,7 @@ export default function Todo() {
             fontFamily: "calibri"
         }} onClick={addTodo}>Add Todo</button>
         &nbsp; &nbsp; &nbsp;
-        {todos.length !== 0 && (
+        {todos.length > 1 && (
             <button style={{
                 backgroundColor: "red",
                 color: "white",
